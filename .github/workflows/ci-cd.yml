@@ -70,7 +70,7 @@ jobs:
 
       - name: Login to ECR
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 233873070253.dkr.ecr.us-west-2.amazonaws.com
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 757474363232.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Tag and push Docker image
         run: |
