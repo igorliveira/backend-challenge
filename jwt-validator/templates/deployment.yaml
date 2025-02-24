@@ -5,7 +5,7 @@ metadata:
   labels:
     app: jwt-validator
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: jwt-validator
@@ -15,7 +15,7 @@ spec:
         app: jwt-validator
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: jwt-validator
           image: "757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:latest"
           imagePullPolicy: IfNotPresent
           ports:
