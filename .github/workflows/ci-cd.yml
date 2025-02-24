@@ -82,9 +82,9 @@ jobs:
           aws eks update-kubeconfig --region us-east-1 --name jwt-validator-eks
           mkdir -p k8s
           export ECR_REPOSITORY_URL="757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:${GITHUB_SHA}"
-          envsubst < k8s-deployment.yaml > k8s/k8s-deployment.yaml
+          envsubst < ./jwt-validator/deployment.yaml > k8s/deployment.yaml
           echo "resources:" > k8s/kustomization.yaml
-          echo "- k8s-deployment.yaml" >> k8s/kustomization.yaml
+          echo "- deployment.yaml" >> k8s/kustomization.yaml
           kubectl kustomize k8s | kubectl apply -f - --force
 
 

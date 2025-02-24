@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:latest"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
