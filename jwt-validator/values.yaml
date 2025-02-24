@@ -1,0 +1,13 @@
+replicaCount: 1
+image:
+  repository: igor0208/jwt-validator
+  pullPolicy: IfNotPresent
+  tag: "3.0"
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080
+annotations:
+  kubernetes.io/ingress.class: alb
+  alb.ingress.kubernetes.io/scheme: internet-facing
+  alb.ingress.kubernetes.io/target-type: instance
