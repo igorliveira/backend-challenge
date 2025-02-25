@@ -26,14 +26,24 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build and test with Maven
-      run: mvn --batch-mode --update-snapshots --no-transfer-progress clean package
+    - name : Login Docker Hub
+      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
-    - name: Upload JAR file
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-jar
-        path: target/*.jar
+    - name: Build Docker image
+      run: docker build -t igor0208/jwt-validator .
+
+    - name: Push image docker
+      run: docker push igor0208/jwt-validator
+
+
+    # - name: Build and test with Maven
+    #   run: mvn --batch-mode --update-snapshots --no-transfer-progress clean package
+
+    # - name: Upload JAR file
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: app-jar
+    #     path: target/*.jar
       
   deploy:
     needs: build
@@ -41,51 +51,18 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Pull image from docker hub
+        run: docker pull igor0208/jwt-validator:latest
+      - name: Remove docker container
+        run: docker rm -f jwt-validator
+      - name: Run docker container
+        run: docker run -d -p 8080:8080 --name jwt-validator igor0208/jwt-validator
+      # - name: Download JAR file
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: app-jar
+      #     path: target
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21
-          distribution: 'adopt'
-
-      - name: Download JAR file
-        uses: actions/download-artifact@v4
-        with:
-          name: app-jar
-          path: target
-
-      - name: Build Docker image
-        run: docker build -t 757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator .
-
-      - name: Install and configure AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip -q awscliv2.zip
-          sudo ./aws/install --update
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region us-west-2
-
-      - name: Login to ECR
-        run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 757474363232.dkr.ecr.us-east-1.amazonaws.com
-
-      - name: Tag and push Docker image
-        run: |
-          docker tag 757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:latest 757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:${GITHUB_SHA}
-          docker push 757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:${GITHUB_SHA}
-
-      - name: Deploy to EKS
-        run: |
-          aws eks update-kubeconfig --region us-east-1 --name jwt-validator
-          mkdir -p k8s
-          export ECR_REPOSITORY_URL="757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:${GITHUB_SHA}"
-          envsubst < ./jwt-validator/templates/deployment.yaml > k8s/deployment.yaml
-          echo "resources:" > k8s/kustomization.yaml
-          echo "- deployment.yaml" >> k8s/kustomization.yaml
-          kubectl kustomize k8s | kubectl apply -f - --force
 
 
 
