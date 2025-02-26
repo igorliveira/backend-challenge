@@ -199,3 +199,11 @@ Nossa pipeline de deploy automático será feita utilizando o GitHub, GitHub Act
 2. **Diretório .github/workflows onde está nosso `ci-cd.yaml` triga o GitHub Actions**
 3. **Feito o build de uma imagem atualizada e enviada ao Docker Hub**
 4. **Nossa EC2 possui um runner instalado qual identifica que a pipeline foi trigada e baixa a nova imagem e atualiza o container**
+
+### URL para acessar API na AWS
+
+O JWT pode ser informado como parâmetro da URL ou no body da requisição.
+
+```
+ec2-52-23-176-211.compute-1.amazonaws.com/api/jwtvalidate
+```
