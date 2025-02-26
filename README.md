@@ -43,7 +43,7 @@ Aplicação consiste na validação de tokens JWT (JSON Web Tokens). O serviço 
 
 ### Descrição das Classes e Métodos
 
-### [`JwtValidatorController`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`JwtValidatorController`](src/main/java/com/api/jwt_validator/controller/JwtValidatorController.java)
 
 Nosso controlador REST qual recebe as requisições HTTP e realiza as primeira validações do token e chama nosso Service para as validações principais.
 
@@ -51,7 +51,7 @@ Nosso controlador REST qual recebe as requisições HTTP e realiza as primeira v
 
 Este método recebe um token JWT como corpo da solicitação HTTP e o valida usando o serviço JwtServiceIpml. Se o token for nulo ele retorna `false` sem chamar nosso Service.
 
-### [`JwtValidatorService`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`JwtValidatorService`](src/main/java/com/api/jwt_validator/service/JwtValidatorService.java)
 
 Nosso service qual tem rensposabilidade de validar o JWT e as regras para cada uma de suas claims.
 
@@ -67,7 +67,7 @@ Este método decodifica nosso token JWT que é um base64 e separa nosso payload 
 
 Este método valida nosso payload, transformando ele em um JSON e garantido que nosso payload é um JSON.
 
-### [`ClaimValidator`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`ClaimValidator`](src/main/java/com/api/jwt_validator/validators/ClaimValidator.java)
 
 Nosso Validator qual tem rensposabilidade de validar o JWT e chamar os validators para cada claim.
 
@@ -79,7 +79,7 @@ Este é o método principal do nosso ClaimValidator responsável por validar as 
 
 Este método valida se possuimos as 3 keys obrigatórias do payload do nosso JWT.
 
-### [`NameValidator`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`NameValidator`](src/main/java/com/api/jwt_validator/validators/NameValidator.java)
 
 Nosso validator que verifica se nosso Name atende os requisitos solicitados.
 
@@ -87,7 +87,7 @@ Nosso validator que verifica se nosso Name atende os requisitos solicitados.
 
 Metódo qual valida se a claim Name possui até 256 caracteres e nenhum número.
 
-### [`RoleValidator`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`RoleValidator`](src/main/java/com/api/jwt_validator/validators/RoleValidator.java)
 
 Validator que verifica a claim Role.
 
@@ -95,7 +95,7 @@ Validator que verifica a claim Role.
 
 Método que verifica se a Role recebida é valida, podendo ser `Admin`, `Member` ou `External`.
 
-### [`SeedValidator`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`SeedValidator`](src/main/java/com/api/jwt_validator/validators/SeedValidator.java)
 
 Validator que verifica a claim Seed.
 
@@ -109,17 +109,17 @@ Realizamos testes abrangentes em todas as nossas classes, considerando os quatro
 
 ### Classes utilizadas nos Testes
 
-#### [`JwtValidatorControllerTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`JwtValidatorControllerTest`](src/test/java/com/api/jwt_validator/controller/JwtValidatorControllerTest.java)
 
-#### [`JwtValidatorServiceTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`JwtValidatorServiceTest`](src/test/java/com/api/jwt_validator/service/JwtValidatorServiceTest.java)
 
-#### [`ClaimValidatorTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`ClaimValidatorTest`](src/test/java/com/api/jwt_validator/validators/ClaimValidatorTest.java)
 
-#### [`NameValidatorTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`NameValidatorTest`](src/test/java/com/api/jwt_validator/validators/NameValidatorTest.java)
 
-#### [`RoleValidatorTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`RoleValidatorTest`](src/test/java/com/api/jwt_validator/validators/RoleValidatorTest.java)
 
-#### [`SeedValidatorTest`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+#### [`SeedValidatorTest`](src/test/java/com/api/jwt_validator/validators/SeedValidatorTest.java)
 
 ## Por dentro da Infraestrutura 
 
@@ -132,7 +132,7 @@ Realizamos testes abrangentes em todas as nossas classes, considerando os quatro
 
 ### Containerização da aplicação
 
-### [`Dockerfile`](src/main/java/com/tokenvalidator/app/services/TokenService.java)
+### [`Dockerfile`](Dockerfile)
 
 Para containerizar a aplicação, é necessário ter o Docker instalado na máquina. Além disso, devemos criar um script semelhante ao que já temos na raiz do projeto. Com isso, podemos realizar o build da aplicação, gerando uma imagem Docker que será utilizada no nosso container.
 
