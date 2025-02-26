@@ -18,7 +18,7 @@ public class JwtValidatorController {
 	private final JwtValidatorService jwtValidatorService = new JwtValidatorService();
 	
     @PostMapping("/jwtvalidate")
-    public ResponseEntity<Boolean> validateJwt(@RequestBody String jwtToken) {
+    public ResponseEntity<Boolean> validate(@RequestBody String jwtToken) {
     	if (jwtToken != null) {
     		boolean validation = jwtValidatorService.validateJwt(jwtToken); 
     		return ResponseEntity.ok(validation);

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jwt-validator
+  name: jwt-validator1
   labels:
     app: jwt-validator
 spec:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: jwt-validator
-          image: "757474363232.dkr.ecr.us-east-1.amazonaws.com/jwt-validator:latest"
+          image: "igor0208/jwt-validator:3.0"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
