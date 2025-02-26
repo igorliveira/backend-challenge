@@ -45,11 +45,11 @@ Aplicação consiste na validação de tokens JWT (JSON Web Tokens). O serviço 
 
 ### [`JwtValidatorController`](src/main/java/com/api/jwt_validator/controller/JwtValidatorController.java)
 
-Nosso controlador REST qual recebe as requisições HTTP e realiza as primeira validações do token e chama nosso Service para as validações principais.
+Nosso controlador REST qual recebe as requisições HTTP e realiza as primeira validações do token e chama nosso service para as validações principais.
 
 #### `validate(String jwtToken)`
 
-Este método recebe um token JWT como corpo da solicitação HTTP e o valida usando o serviço JwtServiceIpml. Se o token for nulo ele retorna `false` sem chamar nosso Service.
+Este método recebe um token JWT como corpo da solicitação HTTP e o valida. Se o token for nulo ele retorna `false` sem chamar nosso service.
 
 ### [`JwtValidatorService`](src/main/java/com/api/jwt_validator/service/JwtValidatorService.java)
 
@@ -73,11 +73,11 @@ Nosso Validator qual tem rensposabilidade de validar o JWT e chamar os validator
 
 #### `validate(Map<String, String> map)`
 
-Este é o método principal do nosso ClaimValidator responsável por validar as claims recebidas em nossos payload se são Name, Role e Seed. E chamar nossos validators especificos para cada claim.
+Este é o método principal do nosso ClaimValidator responsável por validar as claims recebidas em nossos payload se são Name, Role e Seed. E chamar nossos validators específicos para cada claim.
 
 #### `validateKeys(Map<String, String> map)`
 
-Este método valida se possuimos as 3 keys obrigatórias do payload do nosso JWT.
+Este método valida se possuímos as 3 keys obrigatórias do payload do nosso JWT.
 
 ### [`NameValidator`](src/main/java/com/api/jwt_validator/validators/NameValidator.java)
 
@@ -105,7 +105,7 @@ Método que verifica se o Seed não é um número Primo.
 
  Descrição dos Testes
 
-Realizamos testes abrangentes em todas as nossas classes, considerando os quatro cenários descritos na instrução do projeto, além de cenários adicionais. Nosso objetivo é garantir uma validação completa, cobrindo todo o projeto de ponta a ponta. Asseguramos que todos os métodos estão 100% funcionais conforme o esperado e que qualquer falha.
+Realizamos testes abrangentes em todas as nossas classes, considerando os quatro cenários descritos na instrução do projeto, além de cenários adicionais. Nosso objetivo é garantir uma validação completa, cobrindo todo o projeto de ponta a ponta. Asseguramos que todos os métodos estão 100% funcionais conforme o esperado e de qualquer possível falha.
 
 ### Classes utilizadas nos Testes
 
@@ -145,7 +145,7 @@ docker build -t igor0208/jwt-validator .
 
 ### Helm Chart
 
-Utilizamos o Helm Chart para facilitar implatação de aplicação Kubernetes, para validar o funcionamento do nosso chart instalamos o microk8s em nossa maquina e iniciamos utilizando os seguintes comandos na raiz do projeto.
+Utilizamos o Helm Chart para facilitar implantação de aplicação Kubernetes, para validar o funcionamento do nosso chart instalamos o microk8s em nossa maquina e iniciamos utilizando os seguintes comandos na raiz do projeto.
 
 1. **Startar o microk8s:**
  ```bash
@@ -153,7 +153,7 @@ microk8s start
 ```
 2. **Fazer o deploy do nosso container:**
  ```bash
-helm install jwt-validator ./jwt-validator
+helm install jwt-validator ./helm-chart/jwt-validator
 ```
 3. **Validar se está sendo executado:**
  ```bash
@@ -169,7 +169,7 @@ microk8s stop
 ```
 ### Provisionando Infraestrutura com Terraform
 
-Na nossa pasta terraform possuimos nosso arquivo `main.tf` qual possui nossa instância EC2 e um security group como Iac. Para criar nossa infraestrura com o Terraform instalado em nossa maquina acessamos diretório /terraform e executaremos os seguintes comandos.
+Na nossa pasta terraform possuímos nosso arquivo `main.tf` qual possui nossa instância EC2 e um security group como Iac. Para criar nossa infraestrura com o Terraform instalado em nossa maquina acessamos diretório /terraform e executaremos os seguintes comandos.
 
 1. **Iniciar o terraform na pasta e baixar dependências:**
  ```bash
@@ -191,7 +191,7 @@ Além disso criamos um arquivo user_data.sh que será utilizado na inicializaç�
 
 ### Deploy Automatizado para Infra-Estrutura AWS
 
-Nossa pipeline de deploy automatico será feita utilizando o GitHub, GitHub Actions, Docker Hub e AWS EC2 (criada no step anterior com terraform). Abaixo podemos ver o workflow do nosso deploy automatizado.
+Nossa pipeline de deploy automático será feita utilizando o GitHub, GitHub Actions, Docker Hub e AWS EC2 (criada no step anterior com terraform). Abaixo podemos ver o workflow do nosso deploy automatizado.
 
 ![Deploy Automatizado](images/image.png)
 

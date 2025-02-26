@@ -5,8 +5,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: 80
-      targetPort: 8080
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
   selector:
       app: jwt-validator
   type: NodePort
