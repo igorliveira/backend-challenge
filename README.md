@@ -1,128 +1,209 @@
-# Descrição
+# 📋 JWT Validator Application Documentation
 
-Construa uma aplicação que exponha uma api web que recebe por parametros um JWT (string) e verifica se é valida conforme regras abaixo:
+## Sobre a Aplicação
 
-- Deve ser um JWT válido
-- Deve conter apenas 3 claims (Name, Role e Seed)
-- A claim Name não pode ter carácter de números
-- A claim Role deve conter apenas 1 dos três valores (Admin, Member e External)
-- A claim Seed deve ser um número primo.
-- O tamanho máximo da claim Name é de 256 caracteres.
+Aplicação consiste na validação de tokens JWT (JSON Web Tokens). O serviço verifica a estrutura do token e suas claims, assegurando que atendem a critérios específicos de validação.
 
-#  Definição
-Input: Um JWT (string).  
-Output: Um boolean indicando se a valido ou não.
+## Por dentro da Aplicação 
 
-Use a linguagem de programação que considera ter mais conhecimento.
+### Pré-requisitos
 
-# Massa de teste 
+* Java 21 ou superior
+* Maven 3.9.9 ou superior
+* Git
 
-### Caso 1:
-Entrada:
+### Passos para Execução
+
+1. **Clonar o repositório:**
+
+    ```bash
+    git clone https://github.com/igorliveira/backend-challenge
+    cd backend-challenge
+    ```
+
+2. **Compilar o projeto:**
+
+    ```bash
+    mvn clean install
+    ```
+
+3. **Executar a aplicação:**
+
+    ```bash
+    mvn spring-boot:run
+    ```
+
+4. **Executar os testes:**
+
+   Para executar os testes unitários/integração, utilize:
+
+    ```bash
+    mvn test
+    ```
+
+### Descrição das Classes e Métodos
+
+### [`JwtValidatorController`](src/main/java/com/api/jwt_validator/controller/JwtValidatorController.java)
+
+Nosso controlador REST qual recebe as requisições HTTP e realiza as primeira validações do token e chama nosso service para as validações principais.
+
+#### `validate(String jwtToken)`
+
+Este método recebe um token JWT como corpo da solicitação HTTP e o valida. Se o token for nulo ele retorna `false` sem chamar nosso service.
+
+### [`JwtValidatorService`](src/main/java/com/api/jwt_validator/service/JwtValidatorService.java)
+
+Nosso service qual tem rensposabilidade de validar o JWT e as regras para cada uma de suas claims.
+
+#### `validateJwt(String jwt)`
+
+Este é o método principal do nosso Service qual decodifica nosso token JWT, valida seu payload e chama nosso validator principal o ClaimValidator.
+
+#### `decodeJwt(String jwt)`
+
+Este método decodifica nosso token JWT que é um base64 e separa nosso payload qual possui nossas claims e retorna para o metodo principal do Service.
+
+#### `isValidJson(String jwt)`
+
+Este método valida nosso payload, transformando ele em um JSON e garantido que nosso payload é um JSON.
+
+### [`ClaimValidator`](src/main/java/com/api/jwt_validator/validators/ClaimValidator.java)
+
+Nosso Validator qual tem rensposabilidade de validar o JWT e chamar os validators para cada claim.
+
+#### `validate(Map<String, String> map)`
+
+Este é o método principal do nosso ClaimValidator responsável por validar as claims recebidas em nossos payload se são Name, Role e Seed. E chamar nossos validators específicos para cada claim.
+
+#### `validateKeys(Map<String, String> map)`
+
+Este método valida se possuímos as 3 keys obrigatórias do payload do nosso JWT.
+
+### [`NameValidator`](src/main/java/com/api/jwt_validator/validators/NameValidator.java)
+
+Nosso validator que verifica se nosso Name atende os requisitos solicitados.
+
+#### `validate(String name)`
+
+Metódo qual valida se a claim Name possui até 256 caracteres e nenhum número.
+
+### [`RoleValidator`](src/main/java/com/api/jwt_validator/validators/RoleValidator.java)
+
+Validator que verifica a claim Role.
+
+#### `validate(String name)`
+
+Método que verifica se a Role recebida é valida, podendo ser `Admin`, `Member` ou `External`.
+
+### [`SeedValidator`](src/main/java/com/api/jwt_validator/validators/SeedValidator.java)
+
+Validator que verifica a claim Seed.
+
+#### `validate(String name)`
+
+Método que verifica se o Seed não é um número Primo.
+
+ Descrição dos Testes
+
+Realizamos testes abrangentes em todas as nossas classes, considerando os quatro cenários descritos na instrução do projeto, além de cenários adicionais. Nosso objetivo é garantir uma validação completa, cobrindo todo o projeto de ponta a ponta. Asseguramos que todos os métodos estão 100% funcionais conforme o esperado e de qualquer possível falha.
+
+### Classes utilizadas nos Testes
+
+#### [`JwtValidatorControllerTest`](src/test/java/com/api/jwt_validator/controller/JwtValidatorControllerTest.java)
+
+#### [`JwtValidatorServiceTest`](src/test/java/com/api/jwt_validator/service/JwtValidatorServiceTest.java)
+
+#### [`ClaimValidatorTest`](src/test/java/com/api/jwt_validator/validators/ClaimValidatorTest.java)
+
+#### [`NameValidatorTest`](src/test/java/com/api/jwt_validator/validators/NameValidatorTest.java)
+
+#### [`RoleValidatorTest`](src/test/java/com/api/jwt_validator/validators/RoleValidatorTest.java)
+
+#### [`SeedValidatorTest`](src/test/java/com/api/jwt_validator/validators/SeedValidatorTest.java)
+
+## Por dentro da Infraestrutura 
+
+### Pré-requisitos
+
+* Docker 
+* Helm 
+* Terraform
+* Distribuição Kubernetes (microk8s)
+
+### Containerização da aplicação
+
+### [`Dockerfile`](Dockerfile)
+
+Para containerizar a aplicação, é necessário ter o Docker instalado na máquina. Além disso, devemos criar um script semelhante ao que já temos na raiz do projeto. Com isso, podemos realizar o build da aplicação, gerando uma imagem Docker que será utilizada no nosso container.
+
+Importante ressaltar que utilizamos em nosso script uma jre, pois como apenas vão executar a aplicação a JRE atende nosso objetivo e criamos uma imagem com 300MB contra 600MB de uma utilizando JDK.
+
+**Realizar o build da imagem:**
+ ```bash
+docker build -t igor0208/jwt-validator .
 ```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiNzg0MSIsIk5hbWUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05sIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg
-```
-Saida:
-```
-verdadeiro
-```
-Justificativa:
-Abrindo o JWT, as informações contidas atendem a descrição:
-```json
-{
-  "Role": "Admin",
-  "Seed": "7841",
-  "Name": "Toninho Araujo"
-}
-```
 
-### Caso 2:
-Entrada:
-```
-eyJhbGciOiJzI1NiJ9.dfsdfsfryJSr2xrIjoiQWRtaW4iLCJTZrkIjoiNzg0MSIsIk5hbrUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05fsdfsIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg
-```
-Saida:
-```
-falso
-```
-Justificativa:
-JWT invalido
+### Helm Chart
 
-### Caso 3:
-Entrada:
+Utilizamos o Helm Chart para facilitar implantação de aplicação Kubernetes, para validar o funcionamento do nosso chart instalamos o microk8s em nossa maquina e iniciamos utilizando os seguintes comandos na raiz do projeto.
+
+1. **Startar o microk8s:**
+ ```bash
+microk8s start
 ```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs
+2. **Fazer o deploy do nosso container:**
+ ```bash
+helm install jwt-validator ./helm-chart/jwt-validator
 ```
-Saida:
+3. **Validar se está sendo executado:**
+ ```bash
+helm list
 ```
-falso
+4. **Derrubar nossa aplicação:**
+ ```bash
+helm uninstall jwt-validator
 ```
-Justificativa:
-Abrindo o JWT, a Claim Name possui caracter de números
-```json
-{
-  "Role": "External",
-  "Seed": "72341",
-  "Name": "M4ria Olivia"
-}
+5. **Stopar o microk8s:**
+ ```bash
+microk8s stop
 ```
+### Provisionando Infraestrutura com Terraform
 
-### Caso 4:
-Entrada:
+Na nossa pasta terraform possuímos nosso arquivo `main.tf` qual possui nossa instância EC2 e um security group como Iac. Para criar nossa infraestrura com o Terraform instalado em nossa maquina acessamos diretório /terraform e executaremos os seguintes comandos.
+
+1. **Iniciar o terraform na pasta e baixar dependências:**
+ ```bash
+terraform init
 ```
-eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiTWVtYmVyIiwiT3JnIjoiQlIiLCJTZWVkIjoiMTQ2MjciLCJOYW1lIjoiVmFsZGlyIEFyYW5oYSJ9.cmrXV_Flm5mfdpfNUVopY_I2zeJUy4EZ4i3Fea98zvY
+2. **Validar o plano:**
+ ```bash
+terraform plan
 ```
-Saida:
+3. **Executar o plano e criar nossa infraestrutura:**
+ ```bash
+terraform install --auto-approve
 ```
-falso
+4. **Destruir toda infraestrutura criada:**
+ ```bash
+terraform destroy --auto-approve
 ```
-Justificativa:
-Abrindo o JWT, foi encontrado mais de 3 claims.
-```json
-{
-  "Role": "Member",
-  "Org": "BR",
-  "Seed": "14627",
-  "Name": "Valdir Aranha"
-}
+Além disso criamos um arquivo user_data.sh que será utilizado na inicialização da EC2, instala o docker, baixa a última imagem do nosso Docker Hub e sobe nosso container apontando para a porta 80 da nossa EC2.
+
+### Deploy Automatizado para Infra-Estrutura AWS
+
+Nossa pipeline de deploy automático será feita utilizando o GitHub, GitHub Actions, Docker Hub e AWS EC2 (criada no step anterior com terraform). Abaixo podemos ver o workflow do nosso deploy automatizado.
+
+![Deploy Automatizado](images/image.png)
+
+1. **Push no repositório do GitHub**
+2. **Diretório .github/workflows onde está nosso `ci-cd.yaml` triga o GitHub Actions**
+3. **Feito o build de uma imagem atualizada e enviada ao Docker Hub**
+4. **Nossa EC2 possui um runner instalado qual identifica que a pipeline foi trigada e baixa a nova imagem e atualiza o container**
+
+### URL para acessar API na AWS
+
+O JWT pode ser informado como parâmetro da URL ou no body da requisição.
+
 ```
-## Pontos que daremos maior atenção
-
-- Testes de unidade / integração
-- Abstração, acoplamento, extensibilidade e coesão
-- Design de API
-- SOLID
-- Documentação da solução no *README* 
-- Commits realizados durante a construção
-- Observability (Logging/Tracing/Monitoring)
-
-## Demais Itens
-
-- Containerização da aplicação
-- Helm Chart em um cluster de Kubernetes/ECS/FARGATE
-- Repositório no GitHub.
-- Deploy Automatizado para Infra-Estrutura AWS
-- scripts ci/cd
-- coleções do Insomnia ou ferramentas para execução
-- Provisione uma infraestrutura na AWS com OpenTerraform
-- expor a api em algum provedor de cloud (aws, azure...)
-- Uso de Engenharia de Prompt.
-
-### Sobre a documentação
-
-Nesta etapa do processo seletivo queremos entender as decisões por trás do código, portanto é fundamental que o *README* tenha algumas informações referentes a sua solução.
-
-Algumas dicas do que esperamos ver são:
-
-- Instruções básicas de como executar o projeto;
-- Detalhes da descrição dos metodos
-- Caso algo não esteja claro e você precisou assumir alguma premissa, quais foram e o que te motivou a tomar essas decisões.
-
-## Como esperamos receber sua solução
-
-Esta etapa é eliminatória, e por isso esperamos que o código reflita essa importância.
-
-Se tiver algum imprevisto, dúvida ou problema, por favor entre em contato com a gente, estamos aqui para ajudar.
-
-Nos envie o *link de um repo público* com a sua solução
-
+ec2-52-23-176-211.compute-1.amazonaws.com/api/jwtvalidate
+```

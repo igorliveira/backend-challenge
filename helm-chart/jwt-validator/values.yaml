@@ -1,0 +1,10 @@
+replicaCount: 1
+name: jwt-validator
+image:
+  repository: igor0208/jwt-validator
+  pullPolicy: IfNotPresent
+  tag: latest
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080
